@@ -23,12 +23,12 @@ class InteractiveCanvas {
 	private userInput: ValidMove
 	private canvas: Array<string[]>
 
-	constructor(rowCount: number = 6, columnCount: number = 10) {
+	constructor(columnCount: number = 6, rowCount: number = 10) {
 		this.bgChar = '□'
 		this.mainChar = '■'
 		this.rowCount = rowCount
 		this.columnCount = columnCount
-		this.row = Array(rowCount).fill(this.bgChar)
+		this.row = Array(columnCount).fill(this.bgChar)
 		this.pointerCoords = {x: 0, y: 0}
 
 		// rendering the canvas initially
@@ -91,7 +91,7 @@ class InteractiveCanvas {
 	}
 
 	private initializeNewCanvas() {
-		this.canvas = Array(this.columnCount)
+		this.canvas = Array(this.rowCount)
 			.fill(null)
 			.map(() => [...this.row])
 	}
