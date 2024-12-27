@@ -1,36 +1,69 @@
-const readline = require('node:readline');
+const readline = require('node:readline')
 
 const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+	input: process.stdin,
+	output: process.stdout,
+})
 
-const bgChar = '□';
-const mainChar = '■';
+type ValidMove = 'h' | 'j' | 'k' | 'l'
 
-const rowCount: number = 6;
-const columnCount: number = 10;
+class InteractiveCanvas {
+	public bgChar: string
+	public mainChar: string
+	public rowCount: number
+	public columnCount: number
+	private pointerCoords: {[key: string]: number}
+	private row: string[]
+	private canvas: Array<string[]>
+	private userInput: ValidMove
 
-const row: string[] = Array(rowCount).fill(bgChar);
-const canvas: Array<string[]> = Array(columnCount).fill(null).map(() => [...row]);
+	constructor(
+		pointerCoords: {[key: string]: number},
+		rowCount: number = 6,
+		columnCount: number = 10
+	) {
+		this.bgChar = '□'
+		this.mainChar = '■'
+		this.rowCount = rowCount
+		this.columnCount = columnCount
+		this.pointerCoords = pointerCoords
+		this.row = Array(rowCount).fill(this.bgChar)
+		this.canvas = Array(columnCount)
+			.fill(null)
+			.map(() => [...this.row])
 
+		this.canvas[this.pointerCoords.x][this.pointerCoords.y] =
+			this.mainChar
+	}
 
-const pointerCoords: {[key: string]: number} = {
-    x: 1,
-    y: 1
+	private getUserInput() {
+		rl.question(`Enter move: `, (userInput: ValidMove) => {
+			const validMoves: ValidMove[] = ['h', 'j', 'k', 'l'];
+
+			if (!validMoves.includes(userInput)) {
+			    console.log('Invalid move!');
+			    return this.getUserInput();
+			}
+
+			this.handleValidUserInput();
+
+			rl.close();
+		})
+	}
+
+	private handleValidUserInput() {
+        console.log('that was a valid move!');
+	}
+
+	private renderCanvas(): void {
+		console.log(this.canvas)
+	}
+
+	public startGame() {
+		this.getUserInput()
+	}
 }
 
-canvas[pointerCoords.x][pointerCoords.y] = mainChar;
+const interactiveCanvasInstance = new InteractiveCanvas({x: 1, y: 2})
 
-type PlayerInputType = 'h' | 'j' | 'k' | 'l';
-
-// const handlePlayerInput = (playerInput: PlayerInputType) => {
-//     const acceptableInputTypes: PlayerInputType[] = ['h', 'j', 'k', 'l'];
-//     if (!acceptableInputTypes.includes(playerInput))
-//         return 'Invalid input bitch!';
-// }
-
-rl.question(`Which way to go bitch?:  `, playerInput => {
-    console.log(canvas);
-    console.log(`Going: ${ playerInput }`);
-});
+interactiveCanvasInstance.startGame()
