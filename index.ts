@@ -5,7 +5,12 @@ const rl = readline.createInterface({
 	output: process.stdout,
 })
 
-type ValidMove = 'h' | 'j' | 'k' | 'l'
+enum ValidMoves {
+    Left = 'a',
+    Down = 's',
+    Up = 'w',
+    Right = 'd',
+}
 
 interface CoordinateType {
 	x: number
@@ -20,7 +25,7 @@ class InteractiveCanvas {
 
 	private pointerCoords: CoordinateType
 	private row: string[]
-	private userInput: ValidMove
+	private userInput: string
 	private canvas: Array<string[]>
 
 	constructor(columnCount: number = 6, rowCount: number = 10) {
@@ -37,7 +42,7 @@ class InteractiveCanvas {
 	}
 
 	private getUserInput(): void {
-		rl.question(`Enter move: `, (userInput: ValidMove) => {
+		rl.question(`Enter move(W/S/A/D)): `, (userInput: string) => {
 			this.userInput = userInput
 			this.handleUserInput()
 		})
@@ -53,19 +58,19 @@ class InteractiveCanvas {
 		const yCoord = this.pointerCoords.y + 1
 
 		switch (this.userInput) {
-			case 'h':
+			case ValidMoves.Left:
 				if (xCoord === 1) return showOutOfRangeError()
 				this.pointerCoords.x--
 				break
-			case 'j':
+			case ValidMoves.Down:
 				if (yCoord === this.rowCount) return showOutOfRangeError()
 				this.pointerCoords.y++
 				break
-			case 'k':
+			case ValidMoves.Up:
 				if (yCoord === 1) return showOutOfRangeError()
 				this.pointerCoords.y--
 				break
-			case 'l':
+			case ValidMoves.Right:
 				if (xCoord === this.columnCount)
 					return showOutOfRangeError()
 				this.pointerCoords.x++
